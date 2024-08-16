@@ -66,6 +66,10 @@ function App() {
 
         const handleInteraction = () => {
             sphereGroup.position.copy(controls.target)
+            const scaleVector = new THREE.Vector3()
+            const scaleFactor = 10
+            const scale = scaleVector.subVectors(sphereGroup.position, camera.position).length() / scaleFactor
+            sphereGroup.scale.set(scale, scale, scale)
             renderer.render(scene, camera)
 
             if (!isInteracting) {
