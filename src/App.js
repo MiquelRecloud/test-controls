@@ -58,13 +58,33 @@ function App() {
 
         // Add the sphere group to the scene
         scene.add(sphereGroup)
+        sphereGroup.visible = false
 
         // OrbitControls
         const controls = new OrbitControls(camera, renderer.domElement)
-        controls.addEventListener('change', () => {
+        let isInteracting
+
+        const handleInteraction = () => {
             sphereGroup.position.copy(controls.target)
             renderer.render(scene, camera)
-        }) // Render only when controls change
+
+            if (!isInteracting) {
+                sphereGroup.visible = true
+                isInteracting = true
+                renderer.render(scene, camera)
+            }
+            
+
+            clearTimeout(isInteracting)
+
+            isInteracting = setTimeout(() => {
+                sphereGroup.visible = false
+                isInteracting = false
+                renderer.render(scene, camera)
+            }, 100)
+        }
+
+        controls.addEventListener('change', handleInteraction)
 
         // Custom shader material
         let material = new THREE.PointsMaterial({
